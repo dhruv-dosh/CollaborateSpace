@@ -1,4 +1,4 @@
-Project Management System 
+PROJECT MANAGEMENT SYSTEM
 The Project Management System is a web-based platform designed to help teams efficiently manage projects, assign tasks, track progress, and collaborate in real time. It provides a structured workflow, secure user management, and seamless communication features, ensuring smooth project execution.
 
 Key Features
