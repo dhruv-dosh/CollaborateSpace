@@ -20,6 +20,7 @@ jobs:
 
       - name: Deploy to EC2 via SSH and run code
         run: |
+<<<<<<< HEAD
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
 
             echo "Switching to project directory"
@@ -27,6 +28,13 @@ jobs:
             sudo chown -R ec2-user:ec2-user .  # Change ownership of the whole repo
             sudo chmod -R u+rw .  # Ensure read/write permissions for the user
             git config --global --add safe.directory /home/ec2-user/ProjectHive # Add the repo to safe directory
+=======
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e  # Exit immediately if a command fails
+
+            echo "Switching to project directory"
+            cd ProjectHive
+>>>>>>> 5a487a302b13addcfae5cb67fa88db8c6086678a
 
             echo "Pulling latest code"
             git fetch origin
@@ -44,4 +52,8 @@ jobs:
 
             echo "Deployment complete. Listing running containers:"
             docker-compose ps
+<<<<<<< HEAD
           EOF
+=======
+          EOF
+>>>>>>> 5a487a302b13addcfae5cb67fa88db8c6086678a
