@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy to EC2 via SSH and run code
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
 
             echo "Switching to project directory"
             cd ProjectHive
