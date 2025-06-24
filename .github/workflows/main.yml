@@ -21,10 +21,12 @@ jobs:
       - name: Deploy to EC2 via SSH and run code
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e  # Exit immediately if a command fails
 
             echo "Switching to project directory"
             cd ProjectHive
+            sudo chown -R ec2-user:ec2-user .  # Change ownership of the whole repo
+            sudo chmod -R u+rw .  # Ensure read/write permissions for the user
+            git config --global --add safe.directory /home/ec2-user/ProjectHive # Add the repo to safe directory
 
             echo "Pulling latest code"
             git fetch origin
