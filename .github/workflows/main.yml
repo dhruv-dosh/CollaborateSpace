@@ -1,0 +1,45 @@
+name: Deploy ProjectHive with Docker Compose
+
+on:
+  push:
+    branches:
+      - Deploy  # Trigger on push to 'Deploy' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_PROJECTHIVE }}
+
+      - name: Deploy to EC2 via SSH and run code
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e  # Exit immediately if a command fails
+
+            echo "Switching to project directory"
+            cd ProjectHive
+
+            echo "Pulling latest code"
+            git fetch origin
+            git checkout Deploy
+            git pull
+
+            echo "Cleaning up old containers and volumes"
+            docker-compose down --remove-orphans --volumes || true
+            docker container rm -f springboot react-frontend mysql || true
+            docker system prune -f --volumes || true
+
+            echo "Rebuilding and starting Docker containers"
+            docker-compose build --no-cache
+            docker-compose up -d
+
+            echo "Deployment complete. Listing running containers:"
+            docker-compose ps
+          EOF
