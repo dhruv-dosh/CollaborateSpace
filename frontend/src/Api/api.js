@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-const LOCALHOST='http://13.235.24.193:5054'
+const LOCALHOST='http://13.202.244.6:5054'
 
 export const API_BASE_URL = LOCALHOST
 
