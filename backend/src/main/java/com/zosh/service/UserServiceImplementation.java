@@ -103,7 +103,7 @@ public class UserServiceImplementation implements UserService {
 
 		// Send an email containing the reset link
 		sendEmail(user.getEmail(), "Password Reset",
-				"Click the following link to reset your password: http://localhost:5454/reset-password?token="
+				"Click the following link to reset your password: http://13.235.24.193:5454/reset-password?token="
 						+ resetToken);
 	}
 
