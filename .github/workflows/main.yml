@@ -3,7 +3,7 @@ name: Deploy ProjectHive with Docker Compose
 on:
   push:
     branches:
-      - Deploy   # Change to your default branch
+      - Deploy  # Trigger on push to 'Deploy' branch
 
 jobs:
   deploy:
@@ -13,21 +13,33 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Pre-Build Cleanup
-        run: |
-          echo "Pruning unused Docker resources before build..."
-          docker-compose down --remove-orphans --volumes || true
-          docker container rm -f springboot || true
-          docker container rm -f react-frontend || true
-          docker container rm -f mysql || true
-          docker system prune -f --volumes || true
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_PROJECTHIVE }}
 
-      - name: Build and Deploy Docker Containers
+      - name: Deploy to EC2 via SSH and run code
         run: |
-          echo "Building and starting Docker containers..."
-          docker-compose build --no-cache
-          docker-compose up -d
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e  # Exit immediately if a command fails
 
-      - name: Show Running Containers
-        if: always()
-        run: docker-compose ps
+            echo "Switching to project directory"
+            cd ProjectHive
+
+            echo "Pulling latest code"
+            git fetch origin
+            git checkout Deploy
+            git pull
+
+            echo "Cleaning up old containers and volumes"
+            docker-compose down --remove-orphans --volumes || true
+            docker container rm -f springboot react-frontend mysql || true
+            docker system prune -f --volumes || true
+
+            echo "Rebuilding and starting Docker containers"
+            docker-compose build --no-cache
+            docker-compose up -d
+
+            echo "Deployment complete. Listing running containers:"
+            docker-compose ps
+          EOF
