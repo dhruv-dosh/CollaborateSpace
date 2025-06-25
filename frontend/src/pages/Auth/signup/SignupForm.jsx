@@ -51,7 +51,7 @@ const SignupForm = () => {
                     {...field}
                     type="text"
                     className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="Enter your full namettt"
+                    placeholder="Enter your full name `"
                   />
                 </FormControl>
                 <FormMessage />
