@@ -6,7 +6,7 @@ services:
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ProjectHive
+      MYSQL_DATABASE: CollaborateSpace_db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     ports:
